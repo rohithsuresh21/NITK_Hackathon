@@ -9,15 +9,12 @@ from datetime import datetime
 
 app = Flask(__name__)
 
-# Firebase Setup
 cred = credentials.Certificate("serviceAccountKey.json")
 firebase_admin.initialize_app(cred, {
     'databaseURL': 'https://social-saver-bot-default-rtdb.firebaseio.com/'
 })
-
-# Gemini Setup - FIXED MODEL NAME
-genai.configure(api_key="AIzaSyDPlE-ZLtzRKWzxmkL6uNTvQUbGyMUCh_c")
-model = genai.GenerativeModel('gemini-2.5-flash') # Changed from 1.5 to 2.5
+genai.configure(api_key="my_api_id")
+model = genai.GenerativeModel('gemini-2.5-flash') 
 
 def analyze_with_gemini(user_input):
     prompt = """
@@ -59,7 +56,6 @@ HASHTAGS:
 8–12 highly relevant hashtags. lowercase. nospaces.
     """
     try:
-        # Added a small retry for the 429 rate limit issue we saw earlier
         response = model.generate_content(f"{prompt}\n\nUSER MESSAGE: {user_input}")
         return response.text
     except Exception as e:
@@ -75,7 +71,6 @@ def whatsapp_reply():
     msg_lower = incoming_msg.lower()
     resp = MessagingResponse()
     
-    # Source Detection
     source = "blog"
     if "instagram.com" in msg_lower or "instagr.am" in msg_lower:
         source = "instagram"
@@ -105,7 +100,7 @@ def whatsapp_reply():
             'timestamp': datetime.now().isoformat()
         })
         
-        reply = f"✅ *AI Analyzed!*\n\n📌 *{title}*\n📂 *Tag:* {category}\n\n📝 *Summary:*\n{summary}\n\n{hashtags}"
+        reply = f" *AI Analyzed!*\n\n📌 *{title}*\n *Tag:* {category}\n\n *Summary:*\n{summary}\n\n{hashtags}"
         resp.message(reply)
     except Exception as e:
         print(f"Firebase Error: {e}")
@@ -113,4 +108,5 @@ def whatsapp_reply():
     return str(resp)
 
 if __name__ == "__main__":
+
     app.run(port=5000, debug=True)
