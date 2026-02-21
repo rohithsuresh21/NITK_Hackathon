@@ -20,39 +20,28 @@ def analyze_with_gemini(user_input):
     prompt = """
    You are an expert social media content analyzer.
 
-INPUT:
+input by the user:
 The user message contains:
-1) A social media link
-2) Optional keywords or caption written by the user
+A social media link of any platform and a keyword
 
-YOUR TASK:
+your task:
 Identify the most likely topic using ONLY the keywords, text, and link context.
-DO NOT invent specific events, people, brands, locations, or numbers.
 If the content is unclear, give a generic but relevant description based on the keywords.
 
-RULES:
+rule:
 - Focus on the MAIN subject (Fitness, Automotive, Tech, Fashion, Food, Travel, Motivation, etc.)
-- DO NOT explain what a reel is.
-- DO NOT write fluff or meta commentary.
-- DO NOT hallucinate details.
-- Use short, sharp, platform-ready language.
+- not explain what a reel is.
+- do not write fluff or meta commentary.
+- do not hallucinate details.
 - The summary must feel like it matches the reel.
 
-OUTPUT FORMAT (STRICT — no extra text):
-Title | Category | Summary | Hashtags
-
-TITLE:
+title:
 Catchy and relevant to the reel.
 
-CATEGORY:
-One of: Fitness / Automotive / Tech / Food / Travel / Fashion / Motivation / Business / Education / Entertainment / Other
+summary:
+Exactly 6 lines. Each line must describe a different visual or value moment from the reel. Use creator-style language, not AI-style.
 
-SUMMARY:
-Exactly 6 lines.
-Each line must describe a different visual or value moment from the reel.
-Use creator-style language, not AI-style.
-
-HASHTAGS:
+hastags:
 8–12 highly relevant hashtags. lowercase. nospaces.
     """
     try:
@@ -110,3 +99,4 @@ def whatsapp_reply():
 if __name__ == "__main__":
 
     app.run(port=5000, debug=True)
+
